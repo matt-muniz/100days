@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/matt-muniz/100days/issues"
   },
-  "homepage": "https://github.com/matt-muniz/100days#readme"
+  "homepage": "https://github.com/matt-muniz/100days#readme",
+  "dependencies": {
+    "contentful": "^7.14.0"
+  }
 }
