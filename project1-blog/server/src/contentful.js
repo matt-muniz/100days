@@ -46,24 +46,26 @@ client
 
 // Create entry and publish
 
-// client_management
-//   .getSpace('qmbfbfyde358')
-//   .then(space => space.getEnvironment('master'))
-//   .then(environment =>
-//     environment.createEntry('blogPost', {
-//       fields: {
-//         post1: {
-//           'en-US': 'Entry title',
-//         },
-//         post2: {
-//           'en-US': 'Entry title',
-//         },
-//       },
-//     })
-//   )
-//   .then(entry => entry.publish())
-//   .then(entry => console.log(entry))
-//   .catch(console.error);
+client_management
+  .getSpace('qmbfbfyde358')
+  .then(space => space.getEnvironment('master'))
+  .then(environment =>
+    environment.createEntry('blogPost', {
+      fields: {
+        post1: {
+          'en-US': 'Entry title',
+        },
+        post2: {
+          'en-US': 'Entry title',
+        },
+      },
+    })
+  )
+  .then(entry => entry.publish())
+  .then(entry => console.log(entry))
+  .catch(console.error);
+
+// Update specific entry
 client_management
   .getSpace('qmbfbfyde358')
   .then(space => space.getEnvironment('master'))
