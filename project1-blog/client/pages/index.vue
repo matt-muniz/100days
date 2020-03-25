@@ -1,6 +1,7 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
+      {{ messages }}
       <div class="text-center">
         <logo />
         <vuetify-logo />
@@ -63,6 +64,7 @@
 </template>
 
 <script>
+import Pusher from 'pusher-js'
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
@@ -70,6 +72,26 @@ export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  data() {
+    return {
+      messages: []
+    }
+  },
+  methods: {
+    subscribe() {
+      const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
+        cluster: 'us2',
+        forceTLS: true
+      })
+
+      const channel = pusher.subscribe('Blog-Comments')
+      channel.bind('new-event', function(data) {
+        this.messages.push(data)
+        // eslint-disable-next-line
+        console.log(this.messages)
+      })
+    }
   }
 }
 </script>

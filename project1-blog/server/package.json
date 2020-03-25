@@ -4,7 +4,9 @@
   "description": "blog backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./app.js"
   },
   "repository": {
     "type": "git",
@@ -19,10 +21,10 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "contentful": "^7.14.0",
+    "contentful-management": "^5.13.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.2",
-    "pusher": "^3.0.0",
-    "contentful-management": "^5.13.0"
+    "pusher": "^3.0.0"
   }
 }

@@ -18,12 +18,12 @@ const client_management = contentful_management.createClient({
 
 // Get all Entries
 
-client
-  .getEntries()
-  .then(response => {
-    response.items.forEach(item => console.log(item.fields));
-  })
-  .catch(console.error);
+// client
+//   .getEntries()
+//   .then(response => {
+//     response.items.forEach(item => console.log(item.fields));
+//   })
+//   .catch(console.error);
 
 // Get single entry
 
@@ -44,35 +44,14 @@ client
 //   .then(contentType => console.log(contentType))
 //   .catch(console.error);
 
-// Create entry and publish
-
-client_management
-  .getSpace('qmbfbfyde358')
-  .then(space => space.getEnvironment('master'))
-  .then(environment =>
-    environment.createEntry('blogPost', {
-      fields: {
-        post1: {
-          'en-US': 'Entry title',
-        },
-        post2: {
-          'en-US': 'Entry title',
-        },
-      },
-    })
-  )
-  .then(entry => entry.publish())
-  .then(entry => console.log(entry))
-  .catch(console.error);
-
 // Update specific entry
-client_management
-  .getSpace('qmbfbfyde358')
-  .then(space => space.getEnvironment('master'))
-  .then(environment => environment.getEntry('1fnXOEbaYh75nFu7AIVRAj'))
-  .then(entry => {
-    entry.fields.post1['en-US'] = 'New Entry Title';
-    return entry.update();
-  })
-  .then(entry => console.log(entry))
-  .catch(console.error);
+// client_management
+//   .getSpace('qmbfbfyde358')
+//   .then(space => space.getEnvironment('master'))
+//   .then(environment => environment.getEntry('1fnXOEbaYh75nFu7AIVRAj'))
+//   .then(entry => {
+//     entry.fields.post1['en-US'] = 'New Entry Title';
+//     return entry.update();
+//   })
+//   .then(entry => console.log(entry))
+//   .catch(console.error);
