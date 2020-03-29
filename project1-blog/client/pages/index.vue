@@ -1,7 +1,9 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      {{ messages }}
+      <div v-for="(message, index) in messages" :key="index">
+        {{ message }}
+      </div>
       <div class="text-center">
         <logo />
         <vuetify-logo />
@@ -78,6 +80,9 @@ export default {
       messages: []
     }
   },
+  created() {
+    this.subscribe()
+  },
   methods: {
     subscribe() {
       const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
@@ -86,10 +91,10 @@ export default {
       })
 
       const channel = pusher.subscribe('Blog-Comments')
-      channel.bind('new-event', function(data) {
-        this.messages.push(data)
-        // eslint-disable-next-line
-        console.log(this.messages)
+      channel.bind('new-event', (data) => {
+        const { comment } = data
+
+        this.messages.push(comment)
       })
     }
   }
