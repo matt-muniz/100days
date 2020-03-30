@@ -1,8 +1,12 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
+      <div v-for="d in fetchedData" :key="d._id">
+        <p v-if="d.comments">{{ d.title }} - {{ d.comments }}</p>
+      </div>
       <div v-for="(message, index) in messages" :key="index">
-        {{ message }}
+        {{ message.title }}
+        {{ message.comments }}
       </div>
       <div class="text-center">
         <logo />
@@ -67,8 +71,10 @@
 
 <script>
 import Pusher from 'pusher-js'
+import axios from 'axios'
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
+const BASE_URL = 'http://localhost:5000'
 
 export default {
   components: {
@@ -77,13 +83,19 @@ export default {
   },
   data() {
     return {
-      messages: []
+      messages: [],
+      fetchedData: []
     }
   },
   created() {
     this.subscribe()
+    this.fetchData()
   },
   methods: {
+    async fetchData() {
+      const { data } = await axios.get(`${BASE_URL}/api/logs`)
+      this.fetchedData = data.comments
+    },
     subscribe() {
       const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
         cluster: 'us2',
@@ -92,9 +104,7 @@ export default {
 
       const channel = pusher.subscribe('Blog-Comments')
       channel.bind('new-event', (data) => {
-        const { comment } = data
-
-        this.messages.push(comment)
+        this.messages.push(data)
       })
     }
   }
