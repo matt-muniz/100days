@@ -1,6 +1,24 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
+      <div v-for="content in contentfulData" :key="content.id">
+        <v-row>
+          <v-col>
+            <v-card class="mx-auto" max-width="800" width="100%">
+              <div v-for="image in content.headerImage.fields" :key="image.id">
+                <v-img
+                  v-if="image.url"
+                  max-height="300px"
+                  height="100%"
+                  :src="image.url"
+                ></v-img>
+              </div>
+              <v-card-title>{{ content.title }}</v-card-title>
+              <v-card-text>{{ content.body }}</v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
       <div v-for="d in fetchedData" :key="d._id">
         <p v-if="d.comments">{{ d.title }} - {{ d.comments }}</p>
       </div>
@@ -8,93 +26,43 @@
         {{ message.title }}
         {{ message.comments }}
       </div>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a href="https://vuetifyjs.com" target="_blank"> documentation </a>.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a href="https://chat.vuetifyjs.com/" target="_blank" title="chat">
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a href="https://nuxtjs.org/" target="_blank">
-            Nuxt Documentation
-          </a>
-          <br />
-          <a href="https://github.com/nuxt/nuxt.js" target="_blank">
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire">
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
     </v-flex>
+    <v-btn @click="postData">Click</v-btn>
   </v-layout>
 </template>
 
 <script>
 import Pusher from 'pusher-js'
 import axios from 'axios'
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import { createClient } from 'contentful'
+
 const BASE_URL = 'http://localhost:5000'
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  },
   data() {
     return {
       messages: [],
-      fetchedData: []
+      fetchedData: [],
+      contentfulData: []
     }
   },
   created() {
     this.subscribe()
     this.fetchData()
+    this.fetchContentfulData()
   },
   methods: {
     async fetchData() {
       const { data } = await axios.get(`${BASE_URL}/api/logs`)
       this.fetchedData = data.comments
+    },
+    async postData() {
+      const post = await axios.post(`${BASE_URL}/api/logs`, {
+        title: 'Day 6',
+        comments:
+          'I now have Contentful showing on the frontend and mongdb/mongoose and pusherjs working in the backend/connected to the frontend'
+      })
+      return post
     },
     subscribe() {
       const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
@@ -106,6 +74,16 @@ export default {
       channel.bind('new-event', (data) => {
         this.messages.push(data)
       })
+    },
+    async fetchContentfulData() {
+      const client = createClient({
+        // This is the space ID. A space is like a project folder in Contentful terms
+        space: 'qmbfbfyde358',
+        // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+        accessToken: 'dJVVdyqWnCMCx0B0-poZfmK0e5GeUfWOzN4Bn855gPE'
+      })
+      const { items } = await client.getEntries()
+      items.forEach((item) => this.contentfulData.push(item.fields))
     }
   }
 }
