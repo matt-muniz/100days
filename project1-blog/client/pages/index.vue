@@ -24,6 +24,7 @@
       </div>
       <div v-for="(message, index) in messages" :key="index">
         {{ message.title }}
+        <br />
         {{ message.comments }}
       </div>
     </v-flex>
@@ -58,7 +59,7 @@ export default {
     },
     async postData() {
       const post = await axios.post(`${BASE_URL}/api/logs`, {
-        title: 'Day 6',
+        title: 'Day 7',
         comments:
           'I now have Contentful showing on the frontend and mongdb/mongoose and pusherjs working in the backend/connected to the frontend'
       })
