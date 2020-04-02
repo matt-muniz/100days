@@ -24,63 +24,26 @@
           </v-col>
         </v-row>
       </div>
-      <div v-for="d in fetchedData" :key="d._id">
-        <p v-if="d.comments">{{ d.title }} - {{ d.comments }}</p>
-      </div>
-      <div v-for="(message, index) in messages" :key="index">
-        {{ message.title }}
-        <br />
-        {{ message.comments }}
-      </div>
     </v-flex>
-    <v-btn @click="postData">Click</v-btn>
   </v-layout>
 </template>
 
 <script>
-import Pusher from 'pusher-js'
-import axios from 'axios'
+// import Pusher from 'pusher-js'
+// import axios from 'axios'
 import { createClient } from 'contentful'
 
-const BASE_URL = 'http://localhost:5000'
-
 export default {
+  name: 'home',
   data() {
     return {
-      messages: [],
-      fetchedData: [],
       contentfulData: []
     }
   },
   created() {
-    this.subscribe()
-    this.fetchData()
     this.fetchContentfulData()
   },
   methods: {
-    async fetchData() {
-      const { data } = await axios.get(`${BASE_URL}/api/logs`)
-      this.fetchedData = data.comments
-    },
-    async postData() {
-      const post = await axios.post(`${BASE_URL}/api/logs`, {
-        title: 'Day 7',
-        comments:
-          'I now have Contentful showing on the frontend and mongdb/mongoose and pusherjs working in the backend/connected to the frontend'
-      })
-      return post
-    },
-    subscribe() {
-      const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
-        cluster: 'us2',
-        forceTLS: true
-      })
-
-      const channel = pusher.subscribe('Blog-Comments')
-      channel.bind('new-event', (data) => {
-        this.messages.push(data)
-      })
-    },
     async fetchContentfulData() {
       const client = createClient({
         // This is the space ID. A space is like a project folder in Contentful terms

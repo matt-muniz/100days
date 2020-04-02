@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const blogSchema = new Schema(
   {
-    blogID: String, // String is shorthand for {type: String}
-    title: String,
+    blogSlug: String, // String is shorthand for {type: String}
+    name: String,
     comments: String,
   },
   {
