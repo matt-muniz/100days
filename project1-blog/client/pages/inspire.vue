@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-flex class="text-center">
+    <v-flex>
       <div v-for="content in contentfulData" :key="content.id">
         <v-row>
           <v-col>
@@ -15,18 +15,70 @@
               <v-card-title>{{ content.fields.title }}</v-card-title>
               <v-card-text>{{ content.fields.body }}</v-card-text>
             </v-card>
-
-            <div v-for="d in fetchedData" :key="d._id">
-              <p v-if="d.comments">{{ d.name }} - {{ d.comments }}</p>
-            </div>
-            <div v-for="(message, index) in messages" :key="index">
-              <p>{{ message.name }} - {{ message.comments }}</p>
-            </div>
-            <v-form ref="form" v-model="valid">
-              <v-text-field v-model="name"></v-text-field>
-              <v-text-field v-model="comments" required></v-text-field>
-              <v-btn @click="postData">Click</v-btn>
-            </v-form>
+            <v-card class="mx-auto" max-width="800" width="100%">
+              <v-row justify="center">
+                <v-col cols="11">
+                  <v-form ref="form" v-model="valid">
+                    <v-text-field
+                      v-model="name"
+                      outlined
+                      label="Enter your name"
+                    ></v-text-field>
+                    <v-textarea
+                      label="Leave a comment! Tell me what you think."
+                      auto-grow
+                      clearable
+                      outlined
+                      v-model="comments"
+                      :rules="[
+                        (v) =>
+                          !!v ||
+                          'Please fill out this field to submit your comment'
+                      ]"
+                      required
+                    ></v-textarea>
+                    <v-row justify="center">
+                      <v-col cols="4">
+                        <v-btn
+                          block
+                          :disabled="!valid || comments === ''"
+                          @click="postData"
+                          >Leave your comment</v-btn
+                        >
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-col>
+              </v-row>
+              <v-row justify="center">
+                <v-list light width="95%">
+                  <v-list-item v-for="d in fetchedData" :key="d._id">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ d.name }}
+                      </v-list-item-title>
+                      <v-card-text>
+                        {{ d.comments }}
+                      </v-card-text>
+                      <v-divider></v-divider>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item
+                    v-for="(message, index) in messages"
+                    :key="index"
+                  >
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ message.name }}
+                      </v-list-item-title>
+                      <v-card-text>
+                        {{ message.comments }}
+                      </v-card-text>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-row>
+            </v-card>
           </v-col>
         </v-row>
       </div>
@@ -72,7 +124,6 @@ export default {
         name: this.name ? this.name : 'User',
         comments: this.comments
       })
-
       return post
     },
     subscribe() {
