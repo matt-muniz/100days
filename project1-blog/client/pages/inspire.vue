@@ -1,21 +1,10 @@
 <template>
   <v-layout>
     <v-flex>
-      {{ this.$route.params.id }}
       <div v-for="content in blogPostData" :key="content.id">
         <v-row>
           <v-col>
-            <v-card class="mx-auto" max-width="800" width="100%">
-              <div>
-                <v-img
-                  max-height="300px"
-                  height="100%"
-                  :src="content.fields.headerImage.fields.file.url"
-                ></v-img>
-              </div>
-              <v-card-title>{{ content.fields.title }}</v-card-title>
-              <v-card-text>{{ content.fields.body }}</v-card-text>
-            </v-card>
+            <SingleBlogPost :content="content" />
             <v-card class="mx-auto" max-width="800" width="100%">
               <v-row justify="center">
                 <v-col cols="11">
@@ -61,30 +50,14 @@
                   light
                   width="95%"
                 >
-                  <v-list-item v-for="d in fetchedData" :key="d._id">
-                    <v-list-item-content class="ma-0 pa-0 pb-2">
-                      <v-list-item-title class="pb-1">
-                        {{ d.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ d.comments }}
-                      </v-list-item-subtitle>
-                      <v-divider></v-divider>
-                    </v-list-item-content>
+                  <v-list-item v-for="data in fetchedData" :key="data._id">
+                    <FetchedDBData :data="data" />
                   </v-list-item>
                   <v-list-item
                     v-for="(message, index) in messages"
                     :key="index"
                   >
-                    <v-list-item-content class="ma-0 pa-0 pb-2">
-                      <v-list-item-title class="pb-1">
-                        {{ message.name }}
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        {{ message.comments }}
-                      </v-list-item-subtitle>
-                      <v-divider></v-divider>
-                    </v-list-item-content>
+                    <FetchedPusherData :message="message" />
                   </v-list-item>
                 </v-list>
               </v-row>
@@ -99,9 +72,17 @@
 <script>
 import Pusher from 'pusher-js'
 import { mapActions, mapState } from 'vuex'
+import SingleBlogPost from '../components/SingleBlogPost'
+import FetchedDBData from '../components/FetchedDBData'
+import FetchedPusherData from '../components/FetchedPusherData'
 
 export default {
   name: 'inspire',
+  components: {
+    SingleBlogPost,
+    FetchedDBData,
+    FetchedPusherData
+  },
   data() {
     return {
       form: true,
