@@ -1,14 +1,15 @@
 const { Router } = require('express');
 const router = Router();
+require('dotenv').config();
 
 const LogEntrty = require('../models/LogComments');
 
 const Pusher = require('pusher');
 
 const pusher = new Pusher({
-  appId: '968835',
-  key: '6a33f2e6e4b3290f9b48',
-  secret: 'e4f6b266d4be27d9adb9',
+  appId: process.env.PUSER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRETS,
   cluster: 'us2',
 });
 

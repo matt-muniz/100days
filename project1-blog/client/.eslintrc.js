@@ -18,6 +18,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-console': 0,
-    'vue/name-property-casing': 0
+    'vue/name-property-casing': 0,
+    'vue/order-in-components': 0
   }
 }

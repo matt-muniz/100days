@@ -1,7 +1,8 @@
 <template>
   <v-layout>
     <v-flex>
-      <div v-for="content in contentfulData" :key="content.id">
+      {{ this.$route.params.id }}
+      <div v-for="content in blogPostData" :key="content.id">
         <v-row>
           <v-col>
             <v-card class="mx-auto" max-width="800" width="100%">
@@ -21,15 +22,19 @@
                   <v-form ref="form" v-model="valid">
                     <v-text-field
                       v-model="name"
+                      background-color="white"
+                      light
                       outlined
                       label="Enter your name"
                     ></v-text-field>
                     <v-textarea
+                      v-model="comments"
+                      background-color="white"
+                      light
                       label="Leave a comment! Tell me what you think."
                       auto-grow
                       clearable
                       outlined
-                      v-model="comments"
                       :rules="[
                         (v) =>
                           !!v ||
@@ -42,7 +47,7 @@
                         <v-btn
                           block
                           :disabled="!valid || comments === ''"
-                          @click="postData"
+                          @click="postData(setCommentData)"
                           >Leave your comment</v-btn
                         >
                       </v-col>
@@ -51,15 +56,19 @@
                 </v-col>
               </v-row>
               <v-row justify="center">
-                <v-list light width="95%">
+                <v-list
+                  v-if="fetchedData.length > 0 || messages.length > 0"
+                  light
+                  width="95%"
+                >
                   <v-list-item v-for="d in fetchedData" :key="d._id">
-                    <v-list-item-content>
-                      <v-list-item-title>
+                    <v-list-item-content class="ma-0 pa-0 pb-2">
+                      <v-list-item-title class="pb-1">
                         {{ d.name }}
                       </v-list-item-title>
-                      <v-card-text>
+                      <v-list-item-subtitle>
                         {{ d.comments }}
-                      </v-card-text>
+                      </v-list-item-subtitle>
                       <v-divider></v-divider>
                     </v-list-item-content>
                   </v-list-item>
@@ -67,13 +76,14 @@
                     v-for="(message, index) in messages"
                     :key="index"
                   >
-                    <v-list-item-content>
-                      <v-list-item-title>
+                    <v-list-item-content class="ma-0 pa-0 pb-2">
+                      <v-list-item-title class="pb-1">
                         {{ message.name }}
                       </v-list-item-title>
-                      <v-card-text>
+                      <v-list-item-subtitle>
                         {{ message.comments }}
-                      </v-card-text>
+                      </v-list-item-subtitle>
+                      <v-divider></v-divider>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -88,72 +98,54 @@
 
 <script>
 import Pusher from 'pusher-js'
-import axios from 'axios'
-import { createClient } from 'contentful'
-
-const BASE_URL = 'http://localhost:5000'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'inspire',
   data() {
     return {
+      form: true,
       valid: false,
       messages: [],
-      fetchedData: [],
-      contentfulData: [],
       name: '',
-      comments: ''
+      comments: '',
+      commentData: {}
     }
   },
   created() {
     this.subscribe()
-    this.fetchData()
-    this.fetchContentfulData()
+    this.fetchData(this.$route.params.id)
+    if (this.$route.params.id) {
+      this.fetchContentfulData(this.$route.params.id)
+    } else {
+      this.$router.push('/')
+    }
   },
-  methods: {
-    async fetchData() {
-      const { data } = await axios.get(`${BASE_URL}/api/logs`)
-
-      this.fetchedData = data.comments.filter(
-        (slug) => slug.blogSlug === this.$route.params.id
-      )
-    },
-    async postData() {
-      const post = await axios.post(`${BASE_URL}/api/logs`, {
+  computed: {
+    ...mapState('contentful', ['blogPostData']),
+    ...mapState('db', ['fetchedData']),
+    setCommentData() {
+      return {
         blogSlug: this.$route.params.id,
         name: this.name ? this.name : 'User',
         comments: this.comments
-      })
-      return post
-    },
+      }
+    }
+  },
+  methods: {
     subscribe() {
-      const pusher = new Pusher('6a33f2e6e4b3290f9b48', {
+      const pusher = new Pusher(process.env.PUSHER_AECCESS_TOKEN, {
         cluster: 'us2',
         forceTLS: true
       })
-
       const channel = pusher.subscribe('Blog-Comments')
       channel.bind('new-event', (data) => {
         this.messages.push(data)
       })
     },
-    async fetchContentfulData() {
-      const client = createClient({
-        // This is the space ID. A space is like a project folder in Contentful terms
-        space: 'qmbfbfyde358',
-        // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-        accessToken: 'dJVVdyqWnCMCx0B0-poZfmK0e5GeUfWOzN4Bn855gPE'
-      })
-      const { items } = await client.getEntries()
-      if (this.$route.params.id) {
-        const blogPost = items.filter(
-          (item) => item.fields.slug === this.$route.params.id
-        )
-        this.contentfulData = blogPost
-      } else {
-        this.$router.push('/')
-      }
-    }
+    ...mapActions('contentful', ['fetchContentfulData']),
+    ...mapActions('db', ['fetchData']),
+    ...mapActions('db', ['postData'])
   }
 }
 </script>

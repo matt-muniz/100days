@@ -5,7 +5,10 @@
         <v-row>
           <v-col>
             <v-card class="mx-auto" max-width="800" width="100%">
-              <div v-for="image in content.headerImage.fields" :key="image.id">
+              <div
+                v-for="image in content.fields.headerImage.fields"
+                :key="image.id"
+              >
                 <v-img
                   v-if="image.url"
                   max-height="300px"
@@ -13,10 +16,14 @@
                   :src="image.url"
                 ></v-img>
               </div>
-              <v-card-title>{{ content.title }}</v-card-title>
-              <v-card-text>{{ content.body }}</v-card-text>
+              <v-card-title>{{ content.fields.title }}</v-card-title>
+              <v-card-text>{{ content.fields.body }}</v-card-text>
               <v-card-actions>
-                <v-btn color="orange" text @click="toBlogPost(content.slug)">
+                <v-btn
+                  color="orange"
+                  text
+                  @click="toBlogPost(content.fields.slug)"
+                >
                   Click
                 </v-btn>
               </v-card-actions>
@@ -29,32 +36,21 @@
 </template>
 
 <script>
-// import Pusher from 'pusher-js'
-// import axios from 'axios'
-import { createClient } from 'contentful'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'home',
   data() {
-    return {
-      contentfulData: []
-    }
+    return {}
   },
-  created() {
+  mounted() {
     this.fetchContentfulData()
   },
+  computed: {
+    ...mapState('contentful', ['contentfulData'])
+  },
   methods: {
-    async fetchContentfulData() {
-      const client = createClient({
-        // This is the space ID. A space is like a project folder in Contentful terms
-        space: 'qmbfbfyde358',
-        // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-        accessToken: 'dJVVdyqWnCMCx0B0-poZfmK0e5GeUfWOzN4Bn855gPE'
-      })
-      const { items } = await client.getEntries()
-
-      items.forEach((item) => this.contentfulData.push(item.fields))
-    },
+    ...mapActions('contentful', ['fetchContentfulData']),
     toBlogPost(slug) {
       this.$router.push({ name: 'inspire', params: { id: slug } })
     }
