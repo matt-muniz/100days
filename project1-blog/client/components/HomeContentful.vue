@@ -1,36 +1,30 @@
 <template>
-  <v-flex xs12 sm8 md6>
+  <v-row justify="space-between">
     <div v-for="content in contentfulData" :key="content.id">
-      <v-row>
-        <v-col>
-          <v-card class="mx-auto" max-width="800" width="100%">
-            <div
-              v-for="image in content.fields.headerImage.fields"
-              :key="image.id"
-            >
-              <v-img
-                v-if="image.url"
-                max-height="300px"
-                height="100%"
-                :src="image.url"
-              ></v-img>
-            </div>
-            <v-card-title>{{ content.fields.title }}</v-card-title>
-            <v-card-text>{{ content.fields.body }}</v-card-text>
-            <v-card-actions>
-              <v-btn
-                color="orange"
-                text
-                @click="toBlogPost(content.fields.slug)"
-              >
-                Click
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+      <v-col>
+        <v-card class="mx-auto" max-width="800" width="100%">
+          <div
+            v-for="image in content.fields.headerImage.fields"
+            :key="image.id"
+          >
+            <v-img
+              v-if="image.url"
+              max-height="400px"
+              height="100%"
+              :src="image.url"
+            ></v-img>
+          </div>
+          <v-card-title>{{ content.fields.title }}</v-card-title>
+          <v-card-text class="body_text">{{ content.fields.body }}</v-card-text>
+          <v-card-actions>
+            <v-btn color="orange" text @click="toBlogPost(content.fields.slug)">
+              Click
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
     </div>
-  </v-flex>
+  </v-row>
 </template>
 
 <script>
@@ -51,3 +45,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.body_text {
+  display: block;
+  width: 400px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+</style>

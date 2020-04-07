@@ -5,10 +5,10 @@
         <v-row>
           <v-col>
             <SingleBlogPost :content="content" />
-            <v-card class="mx-auto" max-width="800" width="100%">
+            <v-card class="mx-auto pb-5" max-width="800" width="100%">
               <v-row justify="center">
                 <v-col cols="11">
-                  <v-form ref="form" v-model="valid">
+                  <v-form ref="form" v-model="valid" :lazy-validation="lazy">
                     <v-text-field
                       v-model="name"
                       background-color="white"
@@ -36,7 +36,7 @@
                         <v-btn
                           block
                           :disabled="!valid || comments === ''"
-                          @click="postData(setCommentData)"
+                          @click="reset(setCommentData)"
                           >Leave your comment</v-btn
                         >
                       </v-col>
@@ -45,21 +45,22 @@
                 </v-col>
               </v-row>
               <v-row justify="center">
-                <v-list
-                  v-if="fetchedData.length > 0 || messages.length > 0"
-                  light
-                  width="95%"
-                >
-                  <v-list-item v-for="data in fetchedData" :key="data._id">
-                    <FetchedDBData :data="data" />
-                  </v-list-item>
-                  <v-list-item
-                    v-for="(message, index) in messages"
-                    :key="index"
+                <v-col cols="11">
+                  <v-list
+                    v-if="fetchedData.length > 0 || messages.length > 0"
+                    light
                   >
-                    <FetchedPusherData :message="message" />
-                  </v-list-item>
-                </v-list>
+                    <v-list-item v-for="data in fetchedData" :key="data._id">
+                      <FetchedDBData :data="data" />
+                    </v-list-item>
+                    <v-list-item
+                      v-for="(message, index) in messages"
+                      :key="index"
+                    >
+                      <FetchedPusherData :message="message" />
+                    </v-list-item>
+                  </v-list>
+                </v-col>
               </v-row>
             </v-card>
           </v-col>
@@ -86,6 +87,7 @@ export default {
   data() {
     return {
       form: true,
+      lazy: false,
       valid: false,
       messages: [],
       name: '',
@@ -114,6 +116,10 @@ export default {
     }
   },
   methods: {
+    reset(args) {
+      // await this.postData(args)
+      this.$refs.form.reset()
+    },
     subscribe() {
       const pusher = new Pusher(process.env.PUSHER_AECCESS_TOKEN, {
         cluster: 'us2',
