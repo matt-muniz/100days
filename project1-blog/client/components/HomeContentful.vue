@@ -18,7 +18,7 @@
           <v-card-text class="body_text">{{ content.fields.body }}</v-card-text>
           <v-card-actions>
             <v-btn color="orange" text @click="toBlogPost(content.fields.slug)">
-              Click
+              Read More
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -31,8 +31,14 @@
 import { mapActions, mapState } from 'vuex'
 
 export default {
-  mounted() {
-    this.fetchContentfulData()
+  data() {
+    return {
+      filterdArray: []
+    }
+  },
+  async mounted() {
+    await this.fetchContentfulData()
+    this.filteredDAta()
   },
   computed: {
     ...mapState('contentful', ['contentfulData'])
@@ -41,6 +47,13 @@ export default {
     ...mapActions('contentful', ['fetchContentfulData']),
     toBlogPost(slug) {
       this.$router.push({ name: 'inspire', params: { id: slug } })
+    },
+    filteredDAta() {
+      this.contentfulData.forEach((content) => {
+        console.log(content.sys.createdAt)
+        this.filterdArray.unshift(content.sys.createdAt)
+        console.log(this.filterdArray.sort())
+      })
     }
   }
 }

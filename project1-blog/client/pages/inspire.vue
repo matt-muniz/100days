@@ -1,10 +1,10 @@
 <template>
   <v-layout>
     <v-flex>
-      <div v-for="content in blogPostData" :key="content.id">
+      <div>
         <v-row>
           <v-col>
-            <SingleBlogPost :content="content" />
+            <SingleBlogPost :content="blogPostData[0]" />
             <v-card class="mx-auto pb-5" max-width="800" width="100%">
               <v-row justify="center">
                 <v-col cols="11">
@@ -86,7 +86,6 @@ export default {
   },
   data() {
     return {
-      form: true,
       lazy: false,
       valid: false,
       messages: [],
@@ -116,8 +115,8 @@ export default {
     }
   },
   methods: {
-    reset(args) {
-      // await this.postData(args)
+    async reset(args) {
+      await this.postData(args)
       this.$refs.form.reset()
     },
     subscribe() {

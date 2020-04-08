@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="800" width="100%">
+  <v-card v-if="content" class="mx-auto" max-width="800" width="100%">
     <div>
       <v-img
         max-height="300px"
@@ -8,7 +8,7 @@
       ></v-img>
     </div>
     <v-card-title>{{ content.fields.title }}</v-card-title>
-    <v-card-text>{{ content.fields.body }}</v-card-text>
+    <v-card-text class="body-1">{{ content.fields.body }}</v-card-text>
   </v-card>
 </template>
 
