@@ -8,13 +8,23 @@
       ></v-img>
     </div>
     <v-card-title>{{ content.fields.title }}</v-card-title>
-    <v-card-text class="body-1">{{ content.fields.body }}</v-card-text>
+    <v-card-text
+      class="body-1"
+      v-html="markedDownData(content.fields.body)"
+    ></v-card-text>
   </v-card>
 </template>
 
 <script>
+import marked from 'marked'
+
 export default {
-  props: ['content']
+  props: ['content'],
+  methods: {
+    markedDownData(params) {
+      return marked(params, { sanitize: true })
+    }
+  }
 }
 </script>
 
