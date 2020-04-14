@@ -8,6 +8,9 @@
       <v-tabs right>
         <v-tab nuxt to="/">Home</v-tab>
         <v-tab nuxt to="about-us">About Us</v-tab>
+        <v-tab v-if="this.$route.params.id" nuxt to="inspire">
+          {{ this.$route.params.id }}
+        </v-tab>
       </v-tabs>
     </v-app-bar>
     <v-content>

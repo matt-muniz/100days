@@ -1,7 +1,6 @@
 <template>
   <v-layout>
     <v-flex>
-      {{}}
       <div>
         <v-row>
           <v-col>
@@ -70,13 +69,7 @@ export default {
       lazy: false
     }
   },
-  created() {
-    if (this.$route.params.id) {
-      this.fetchContentfulData(this.$route.params.id)
-    } else {
-      this.$router.push('/')
-    }
-  },
+  created() {},
   computed: {
     ...mapState('contentful', ['blogPostData'])
   },

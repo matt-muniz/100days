@@ -18,7 +18,7 @@ export default {
 
   actions: {
     async fetchContentfulData({ commit }, params) {
-      const { items } = await client.getEntries()
+      const { items } = await client.getEntries({ order: '-sys.createdAt' })
       commit('SET_CONTENTFUL_DATA', items)
       if (params) {
         const blogPost = items.filter((item) => item.fields.slug === params)

@@ -38,7 +38,6 @@ export default {
   },
   async mounted() {
     await this.fetchContentfulData()
-    this.filteredDAta()
   },
   computed: {
     ...mapState('contentful', ['contentfulData'])
@@ -47,13 +46,6 @@ export default {
     ...mapActions('contentful', ['fetchContentfulData']),
     toBlogPost(slug) {
       this.$router.push({ name: 'inspire', params: { id: slug } })
-    },
-    filteredDAta() {
-      this.contentfulData.forEach((content) => {
-        console.log(content.sys.createdAt)
-        this.filterdArray.unshift(content.sys.createdAt)
-        console.log(this.filterdArray.sort())
-      })
     }
   }
 }
