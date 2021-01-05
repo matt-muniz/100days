@@ -14,7 +14,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/dotenv": "^1.4.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-runtime": "^6.26.0",
     "contentful": "^7.14.0",
     "contentful-management": "^5.16.1",
