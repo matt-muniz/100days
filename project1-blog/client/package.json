@@ -18,7 +18,7 @@
     "babel-runtime": "^6.26.0",
     "contentful": "^7.14.0",
     "contentful-management": "^5.16.1",
-    "marked": "^0.8.2",
+    "marked": "^4.0.10",
     "nuxt": "^2.0.0",
     "pusher-js": "^5.1.1"
   },
