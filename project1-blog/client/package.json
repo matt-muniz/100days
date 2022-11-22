@@ -19,7 +19,7 @@
     "contentful": "^7.14.0",
     "contentful-management": "^5.16.1",
     "marked": "^0.8.2",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "pusher-js": "^5.1.1"
   },
   "devDependencies": {
